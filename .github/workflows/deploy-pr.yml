@@ -22,7 +22,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🚀 Starting deployment for PR #${context.issue.number}`
+              body: '🚀 Starting deployment for PR #' + context.issue.number
             });
       
       - name: Deploy to server
