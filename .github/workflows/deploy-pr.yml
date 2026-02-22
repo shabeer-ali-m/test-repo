@@ -35,7 +35,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || '22' }}
           script: |
-            cd /path/to/your/app
+            cd /home/ubuntu/
             ./deploy.sh
       
       - name: Comment deployment result
