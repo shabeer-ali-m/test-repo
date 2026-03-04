@@ -1,0 +1,40 @@
+name: Append PR Description to Single File
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  append-pr:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Append PR info to PR_LOG.md
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+          MERGED_AT="${{ github.event.pull_request.merged_at }}"
+
+          echo "" >> PR_LOG.md
+          echo "## PR #${PR_NUMBER} - ${PR_TITLE}" >> PR_LOG.md
+          echo "Merged on: ${MERGED_AT}" >> PR_LOG.md
+          echo "" >> PR_LOG.md
+          echo "${PR_BODY}" >> PR_LOG.md
+          echo "" >> PR_LOG.md
+          echo "---" >> PR_LOG.md
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add PR_LOG.md
+          git commit -m "Append PR #${{ github.event.pull_request.number }} to PR_LOG.md"
+          git push
